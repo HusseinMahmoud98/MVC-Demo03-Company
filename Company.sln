@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Company.Demo03.PL", "Compan
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Company.DAL", "Company.DAL\Company.DAL.csproj", "{A52C7843-C4FF-441B-922C-D02004CC0C3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Company.PLL", "Company.PLL\Company.PLL.csproj", "{5D19B59C-88E7-4EB0-8E8C-DC8DE19D8083}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Company.BLL", "Company.PLL\Company.BLL.csproj", "{5D19B59C-88E7-4EB0-8E8C-DC8DE19D8083}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
