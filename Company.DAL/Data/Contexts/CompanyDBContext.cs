@@ -11,15 +11,15 @@ namespace Company.DAL.Data.Contexts
 {
     public class CompanyDBContext : DbContext
     {
-        public CompanyDBContext(): base()
+        public CompanyDBContext(DbContextOptions<CompanyDBContext> options): base(options)
         {
             
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Server =.; Database = CompanyMVC; TrustedConnection = True; TrustServerCertificate = True;");
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer("Server =.; Database = CompanyMVC; TrustedConnection = True; TrustServerCertificate = True;");
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
