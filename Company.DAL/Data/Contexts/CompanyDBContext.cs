@@ -28,5 +28,6 @@ namespace Company.DAL.Data.Contexts
             base.OnModelCreating(modelBuilder);
         }
         public DbSet<Department> Departments { get; set; }
+        public DbSet<Employees> Employees { get; set; }
     }
 }
