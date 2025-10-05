@@ -1,4 +1,5 @@
-﻿ using Company.BLL.Interfaces;
+﻿using AutoMapper;
+using Company.BLL.Interfaces;
 using Company.BLL.Repositories;
 using Company.DAL.Models;
 using Company.Demo03.PL.Dtos;
@@ -11,21 +12,49 @@ namespace Company.Demo03.PL.Controllers
     public class EmployeeController : Controller
     {
         private readonly IEmployeeRepository _employeeRepository;
-        public EmployeeController(IEmployeeRepository employeeRepository)
+        private readonly IDepartmentRepository _departmentRepository;
+        private readonly IMapper _mapper;
+
+        public EmployeeController(
+            IEmployeeRepository employeeRepository,
+            IDepartmentRepository departmentRepository,
+            IMapper mapper)
         {
             _employeeRepository = employeeRepository;
+            _departmentRepository = departmentRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(string? SearchInput)
         {
-            var employees = _employeeRepository.GetAll();
-            return View(employees);
+            // Dictionary : 3 Properties
+            // 1.ViewData : Transfer extra information from controller(Action) to View
+            //ViewData["Message"] = "Hello";
+
+            // 2. ViewBag : Transfer extra information from controller(Action) to View
+
+
+            IEnumerable<Employees> employees;
+
+            if (string.IsNullOrEmpty(SearchInput))
+            { 
+                employees = _employeeRepository.GetAll();
+            }
+
+            else
+            {
+                employees = _employeeRepository.GetByName(SearchInput);
+            }
+
+                return View(employees);
         }
 
         [HttpGet]
         public IActionResult Create()
         {
+            var departemnt = _departmentRepository.GetAll();
+            ViewData["Department"] = departemnt;
             return View();
         }
 
@@ -34,24 +63,30 @@ namespace Company.Demo03.PL.Controllers
         {
             if (ModelState.IsValid)
             {
-                var employee = new Employees()
-                {
-                    Name = model.Name,
-                    Age = model.Age,
-                    Email = model.Email,
-                    Address = model.Address,
-                    Phone = model.Phone,
-                    Salary = model.Salary,
-                    IsActive = model.IsActive,
-                    IsDeleted = model.IsDeleted,
-                    HiringDate = model.HiringDate,
-                    CreateAt = model.CreateAt
-                };
+                ////Manual Mapping
+                //var employee = new Employees()
+                //{
+                //    Name = model.Name,
+                //    Age = model.Age,
+                //    Email = model.Email,
+                //    Address = model.Address,
+                //    Phone = model.Phone,
+                //    Salary = model.Salary,
+                //    IsActive = model.IsActive,
+                //    IsDeleted = model.IsDeleted,
+                //    HiringDate = model.HiringDate,
+                //    CreateAt = model.CreateAt,
+                //    DepartmentId = model.DepartmentId
+                //};
+
+                //Using mapper
+                var employee = _mapper.Map<Employees>(model);
 
                 var count = _employeeRepository.Add(employee);
 
                 if (count > 0)
                 {
+                    TempData["Message"] = "Employee is created";
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -69,13 +104,18 @@ namespace Company.Demo03.PL.Controllers
 
             if (employee is null) 
                 return NotFound(new { statusCode = 404, message = $"Empolyee with Id :{id} is not found" });
+            
+            //var dtoEmployee = _mapper.Map<DtoEmployee>(employee);
 
-            return View(viewName ,employee);
+            return View(viewName , employee);
         }
 
         [HttpGet]
         public IActionResult Edit(int? id)
         {
+            var departemnt = _departmentRepository.GetAll();
+            ViewData["Department"] = departemnt;
+
             if (id is null)
                 return BadRequest("Invalid Id");
 
@@ -84,19 +124,25 @@ namespace Company.Demo03.PL.Controllers
             if (employee is null)
                 return NotFound(new { statusCode = 404, message = $"Empolyee with Id :{id} is not found" });
 
-            var employeeDto = new DtoEmployee()
-            {
-                Name = employee.Name,
-                Age = employee.Age,
-                Email = employee.Email,
-                Address = employee.Address,
-                Phone = employee.Phone,
-                Salary = employee.Salary,
-                IsActive = employee.IsActive,
-                IsDeleted = employee.IsDeleted,
-                HiringDate = employee.HiringDate,
-                CreateAt = employee.CreateAt
-            };
+
+            ////Manual Mapping
+            //var employeeDto = new DtoEmployee()
+            //{
+            //    Name = employee.Name,
+            //    Age = employee.Age,
+            //    Email = employee.Email,
+            //    Address = employee.Address,
+            //    Phone = employee.Phone,
+            //    Salary = employee.Salary,
+            //    IsActive = employee.IsActive,
+            //    IsDeleted = employee.IsDeleted,
+            //    HiringDate = employee.HiringDate,
+            //    CreateAt = employee.CreateAt,
+            //    DepartmentId = employee.DepartmentId
+            //};
+
+            //mapping using AytoMapper
+            var employeeDto = _mapper.Map<DtoEmployee>(employee);
 
             return View(employeeDto);
 
@@ -124,7 +170,8 @@ namespace Company.Demo03.PL.Controllers
                     IsActive = model.IsActive,
                     IsDeleted = model.IsDeleted,
                     HiringDate = model.HiringDate,
-                    CreateAt = model.CreateAt
+                    CreateAt = model.CreateAt,
+                    DepartmentId = model.DepartmentId
                 };
 
                 var count = _employeeRepository.Update(employee);

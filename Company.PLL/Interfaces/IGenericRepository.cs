@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Company.BLL.Interfaces
 {
-    public interface IGenericRepository<T>
+    public interface IGenericRepository<TEntity>
     {
-        IEnumerable<T> GetAll();
-        T? GetById(int id);
-        int Add(T model);
-        int Update(T model);
-        int Delete(T model);
+        IEnumerable<TEntity> GetAll();
+        TEntity? GetById(int id);
+        int Add(TEntity model);
+        int Update(TEntity model);
+        int Delete(TEntity model);
     }
 }

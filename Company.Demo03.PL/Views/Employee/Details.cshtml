@@ -1,4 +1,4 @@
-﻿@model Employees
+﻿@model Employees 
 @{
     ViewData["Title"] = "Details";
 }
@@ -11,7 +11,7 @@
 <div>
     <partial name="EmployeePartialView/_DeleteDetailsPartialView" />
 
-    <div class="my-3">
+    @* <div class="my-3">
         <label asp-for="Name" class="col-form-label"></label>
         <input asp-for="Name" class="form-control" readonly />
     </div>
@@ -60,7 +60,7 @@
     <div class="my-3">
         <label asp-for="CreateAt" class="col-form-label"></label>
         <input asp-for="CreateAt" class="form-control" readonly />
-    </div>
+    </div> *@
 
 
 

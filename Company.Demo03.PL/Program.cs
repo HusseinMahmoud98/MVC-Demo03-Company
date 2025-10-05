@@ -2,6 +2,7 @@ using Company.BLL.Interfaces;
 using Company.BLL.Repositories;
 using Company.DAL.Data.Contexts;
 using Company.DAL.Models;
+using Company.Demo03.PL.Mapping;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -11,12 +12,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews(); //Register Built-in MVC Services
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); //Allow DI For DepartmentRepository
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddAutoMapper(m => m.AddProfile(new EmployeeProfile()));
+
+//Life Time
+//builder.Services.AddScoped(); //Create object life time per request => then become unreachable object
+//builder.Services.AddTransient(); //Create object life time per operation
+//builder.Services.AddSingleton(); //Create object life time per Application
 
 builder.Services.AddDbContext<CompanyDBContext>(options => //Allow DI For CompanyDbContext
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
- 
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
