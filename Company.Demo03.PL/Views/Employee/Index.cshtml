@@ -33,6 +33,7 @@
     <table class="table table-hover table-striped">
         <thead>
             <tr>
+                <th>Image</th>
                 <th>Name</th>
                 <th>Age</th>
                 <th>Email</th>
@@ -54,6 +55,9 @@
             @foreach (var item in Model)
             {
                 <tr>
+                    <td>
+                        <img src="~/files/images/@item.ImageName" class="img-fluid rounded-circle" />
+                    </td>
                     <td>@item.Name</td>
                     <td>@item.Age</td>
                     <td>@item.Email</td>
@@ -74,7 +78,7 @@
                         <td>No Department</td>
                     }
 
-                    
+                  
 
                     @* <td>
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success">Details</a>

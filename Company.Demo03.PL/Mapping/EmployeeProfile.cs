@@ -11,8 +11,11 @@ namespace Company.Demo03.PL.Mapping
             //CreateMap<DtoEmployee, Employees>().ReverseMap();
             CreateMap<DtoEmployee, Employees>()
                 .ForMember(e => e.Name, o=> o.MapFrom(s => s.Name));
-            CreateMap<Employees, DtoEmployee>();
+            CreateMap<Employees, DtoEmployee>()
+                .ForMember(e => e.DepartmentName, o =>o.MapFrom(s => s.Department.Name));
            
+           
+
         }
     }
 }
