@@ -1,3 +1,4 @@
+using Company.BLL;
 using Company.BLL.Interfaces;
 using Company.BLL.Repositories;
 using Company.DAL.Data.Contexts;
@@ -10,8 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the cont ainer.
 builder.Services.AddControllersWithViews(); //Register Built-in MVC Services
-builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); //Allow DI For DepartmentRepository
-builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+//builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); //Allow DI For DepartmentRepository
+//builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddAutoMapper(m => m.AddProfile(new EmployeeProfile()));
 
 //Life Time

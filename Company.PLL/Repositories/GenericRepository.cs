@@ -18,45 +18,45 @@ namespace Company.BLL.Repositories
         {
             _context = context;
         }
-        public IEnumerable<TEntity> GetAll()
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
             //will be refactoried using a design pattern
             if(typeof(TEntity) == typeof(Employees))
             {
-                return (IEnumerable<TEntity>)_context.Employees.Include(E => E.Department).ToList();
+                return (IEnumerable<TEntity>) await _context.Employees.Include(E => E.Department).ToListAsync();
             }
 
-            return _context.Set<TEntity>().ToList();
+            return await _context.Set<TEntity>().ToListAsync();
         }
 
-        public TEntity? GetById(int id)
+        public async Task<TEntity?> GetByIdAsync(int id)
         {
             //will be refactoried using a design pattern
             if (typeof(TEntity) == typeof(Employees))
             {
-                return _context.Employees.Include(E => E.Department).FirstOrDefault(e => e.Id == id) as TEntity;
+                return await _context.Employees.Include(E => E.Department).FirstOrDefaultAsync(e => e.Id == id) as TEntity;
             }
 
-            return _context.Set<TEntity>()
-                .FirstOrDefault(e => e.Id == id);
+            return await _context.Set<TEntity>()
+                .FirstOrDefaultAsync(e => e.Id == id);
         }
 
-        public int Add(TEntity model)
+        public async Task AddAsync(TEntity model)
         {
-            _context.Add(model);
-            return _context.SaveChanges();
+            await _context.AddAsync(model);
+            //return _context.SaveChanges();
         }
 
-        public int Update(TEntity model)
+        public void Update(TEntity model)
         {
             _context.Update(model);
-            return _context.SaveChanges();
+            //return _context.SaveChanges();
         }
 
-        public int Delete(TEntity model)
+        public void Delete(TEntity model)
         {
             _context.Remove(model);
-            return _context.SaveChanges();
+            //return _context.SaveChanges();
         }    
     }
 }
