@@ -4,6 +4,7 @@ using Company.BLL.Repositories;
 using Company.DAL.Data.Contexts;
 using Company.DAL.Models;
 using Company.Demo03.PL.Mapping;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -25,7 +26,15 @@ builder.Services.AddDbContext<CompanyDBContext>(options => //Allow DI For Compan
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+ 
+builder.Services.AddIdentity<AppUser, IdentityRole>()
+    .AddEntityFrameworkStores<CompanyDBContext>();
 
+
+builder.Services.ConfigureApplicationCookie(config =>
+{
+    config.LoginPath = "/Account/SignIn";
+});
 
 var app = builder.Build();
 
@@ -40,14 +49,15 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+   // .WithStaticAssets();
 
 
 app.Run();
