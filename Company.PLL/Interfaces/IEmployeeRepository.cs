@@ -14,5 +14,6 @@ namespace Company.BLL.Interfaces
         //int Add(Employees model);
         //int Update(Employees model);
         //int Delete(Employees model);
+        Task<List<Employees>> GetByNameAsync(string name);
     }
 }

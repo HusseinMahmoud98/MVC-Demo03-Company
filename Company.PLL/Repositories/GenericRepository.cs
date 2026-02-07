@@ -1,5 +1,6 @@
 ﻿using Company.BLL.Interfaces;
 using Company.DAL.Models;
+using Company.DAL.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,41 +10,53 @@ using System.Threading.Tasks;
 
 namespace Company.BLL.Repositories
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
+    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : BaseEntity
     {
-        private readonly DbContext _context;
+        private readonly CompanyDBContext _context;
 
-        public GenericRepository(DbContext context)
+        public GenericRepository(CompanyDBContext context)
         {
             _context = context;
         }
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            return _context.Set<T>().ToList();
+            //will be refactoried using a design pattern
+            if(typeof(TEntity) == typeof(Employees))
+            {
+                return (IEnumerable<TEntity>) await _context.Employees.Include(E => E.Department).ToListAsync();
+            }
+
+            return await _context.Set<TEntity>().ToListAsync();
         }
 
-        public T? GetById(int id)
+        public async Task<TEntity?> GetByIdAsync(int id)
         {
-            return _context.Set<T>()
-                .FirstOrDefault(e => e.Id == id);
+            //will be refactoried using a design pattern
+            if (typeof(TEntity) == typeof(Employees))
+            {
+                return await _context.Employees.Include(E => E.Department).FirstOrDefaultAsync(e => e.Id == id) as TEntity;
+            }
+
+            return await _context.Set<TEntity>()
+                .FirstOrDefaultAsync(e => e.Id == id);
         }
 
-        public int Add(T model)
+        public async Task AddAsync(TEntity model)
         {
-            _context.Add(model);
-            return _context.SaveChanges();
+            await _context.AddAsync(model);
+            //return _context.SaveChanges();
         }
 
-        public int Update(T model)
+        public void Update(TEntity model)
         {
             _context.Update(model);
-            return _context.SaveChanges();
+            //return _context.SaveChanges();
         }
 
-        public int Delete(T model)
+        public void Delete(TEntity model)
         {
             _context.Remove(model);
-            return _context.SaveChanges();
+            //return _context.SaveChanges();
         }    
     }
 }

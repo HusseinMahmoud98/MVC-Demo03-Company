@@ -12,10 +12,17 @@ namespace Company.BLL.Repositories
 {
     public class EmployeeRepository : GenericRepository<Employees>, IEmployeeRepository
     {
+        private readonly CompanyDBContext _context;
+
         //Ask CKR to create an object from companyDbContext
         public EmployeeRepository(CompanyDBContext context) :base(context) 
         {
-             
+            _context = context;
+        }
+
+        public async Task<List<Employees>> GetByNameAsync(string name)
+        {
+            return await _context.Employees.Include(e => e.Department).Where(e => e.Name.ToLower() == name.ToLower()).ToListAsync();
         }
         //private readonly CompanyDBContext _context;
 
@@ -52,7 +59,7 @@ namespace Company.BLL.Repositories
         //    return _context.SaveChanges();
         //}
 
-    
-     
+
+
     }
 }
